@@ -3,9 +3,11 @@ import model
 
 def izpis_igre(igra):
     tekst = (
+        "=================================================\n\n"
         "Število preostalih preizkusov: {stevilo_preostalih_poskusov} \n\n"
         "        {pravilni_del_gesla}\n\n"
         "Neuspeli poskusi: {neuspeli_poskusi}\n\n"
+        "================================================="
     ).format(
         stevilo_preostalih_poskusov=model.STEVILO_DOVOLJENIH_NAPAK - igra.stevilo_napak() + 1,
         pravilni_del_gesla=igra.pravilni_del_gesla(),
@@ -16,7 +18,7 @@ def izpis_igre(igra):
 
 def izpis_zmage(igra):
     tekst = (
-        "Wipiii, zmaga! Gelo je bilo: {geslo} \n\n"
+        "\n#####Wipiii, zmaga! Geslo je bilo: {geslo} #####\n\n"
     ).format(
         geslo=igra.geslo
     )
@@ -25,7 +27,7 @@ def izpis_zmage(igra):
 
 def izpis_poraza(igra):
     tekst = (
-        "Booo, poraz! Gelo je bilo: {geslo} \n\n"
+        "\nBooo, poraz! Gelo je bilo: {geslo} #####\n\n"
     ).format(
         geslo=igra.geslo
     )
@@ -33,7 +35,10 @@ def izpis_poraza(igra):
 
 
 def izpis_napake():
-    return "\n#### Ugiba se ena črka naenkrat! ####\n"
+    return "\n#### Ugiba se ena črka naenkrat! ####\n\n"
+
+def izpis_napake_znak():
+    return "\n#### Ugib naj ne vsebuje posebnih znakov! ####\n"
 
 
 def zahtevaj_vnos():
@@ -52,12 +57,22 @@ def pozeni_vmesnik():
         rezultat_ugiba = igra.ugibaj(poskus)
         if rezultat_ugiba == model.VEC_KOT_CRKA:
             print(izpis_napake())
-        elif igra.zmaga():
+        elif rezultat_ugiba == model.POSEBEN_ZNAK:
+            print(izpis_napake_znak())
+        elif rezultat_ugiba == model.ZMAGA:
             print(izpis_zmage(igra))
-        elif igra.poraz():
+            ponovni_zagon = input("Za ponovni zagon vpišite 1.\n").strip()
+            if ponovni_zagon == "1":
+                igra = model.nova_igra()
+            else:
+                break
+        elif rezultat_ugiba == model.PORAZ:
             print(izpis_poraza(igra))
-            break
-    return
+            ponovni_zagon = input("Za ponovni zagon vpišite 1.").strip()
+            if ponovni_zagon == "1":
+                igra = model.nova_igra()
+            else:
+                break
 
 
 #Zaženi igro:

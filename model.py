@@ -5,6 +5,8 @@ PONOVLJENA_CRKA = "O"
 NAPACNA_CRKA = "-"
 ZMAGA = "W"
 PORAZ = "X"
+VEC_KOT_CRKA = ">"
+
 
 class Igra:
 
