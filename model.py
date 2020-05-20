@@ -1,4 +1,5 @@
 import random
+
 STEVILO_DOVOLJENIH_NAPAK = 9
 PRAVILNA_CRKA = "+"
 PONOVLJENA_CRKA = "O"
@@ -6,6 +7,7 @@ NAPACNA_CRKA = "-"
 ZMAGA = "W"
 PORAZ = "X"
 VEC_KOT_CRKA = ">"
+POSEBEN_ZNAK = "#"
 
 
 class Igra:
@@ -45,7 +47,11 @@ class Igra:
         return " ".join(self.napacne_crke())
 
     def ugibaj(self, ugib):
+        if len(ugib) > 1 or len(ugib) == 0:
+            return VEC_KOT_CRKA
         crka = ugib.upper()
+        if crka not in "ABCČDEFGHIJKLMNOPRSŠTVUZŽXYWQĐĆ":
+            return POSEBEN_ZNAK
         if crka in self.crke:
             return PONOVLJENA_CRKA
         else:

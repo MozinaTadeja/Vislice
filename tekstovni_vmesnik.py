@@ -61,14 +61,14 @@ def pozeni_vmesnik():
             print(izpis_napake_znak())
         elif rezultat_ugiba == model.ZMAGA:
             print(izpis_zmage(igra))
-            ponovni_zagon = input("Za ponovni zagon vpišite 1.\n").strip()
+            ponovni_zagon = input("Za ponovni zagon vpišite 1.").strip()
             if ponovni_zagon == "1":
                 igra = model.nova_igra()
             else:
                 break
         elif rezultat_ugiba == model.PORAZ:
             print(izpis_poraza(igra))
-            ponovni_zagon = input("Za ponovni zagon vpišite 1.").strip()
+            ponovni_zagon = input("Za ponovni zagon vpišite 1.\n").strip()
             if ponovni_zagon == "1":
                 igra = model.nova_igra()
             else:
