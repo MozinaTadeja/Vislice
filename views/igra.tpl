@@ -1,16 +1,5 @@
 % import model
-
-<!DOCTYPE html>
-<html>
-
-<body>
-
-  <h1>Vislice</h1>
-
-  <blockquote>
-    Vislice so najboljša igra za preganjanje dolgčasa (poleg tetrisa).
-    <small>Študentje</small>
-  </blockquote>
+%rebase('base.tpl', title='Vislice')
 
 <table>
 <td>
@@ -23,7 +12,7 @@
     </tr>
 
     <tr>
-        <br><img src="../../img/{{igra.stevilo_napak()}}.jpg" alt="obesanje">
+        <br><img src="../img/{{igra.stevilo_napak()}}.jpg" alt="obesanje">
     </tr>
 </td>
 </table>
@@ -42,7 +31,7 @@
 
 Pravilno geslo: {{igra.geslo}}
 
-<form action="/igra/" method="post">
+<form action="/nova_igra/" method="post">
     <button type="submit">Nova igra</button>
 </form>
 
@@ -50,12 +39,8 @@ Pravilno geslo: {{igra.geslo}}
 
 
 
-<form action="/igra/{{id_igre}}/" method="post">
+<form action="/igra/" method="post">
     Črka: <input type="text" name='crka'>
     <button type="submit">Pošlji ugib</button>
 </form>
 % end
-
-</body>
-
-</html>
