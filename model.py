@@ -123,7 +123,7 @@ class Vislice:
         with open(self.datoteka_s_stanjem, 'w', encoding='utf-8') as f:
             igre1 = {id_igre: ((igra.geslo, igra.crke), poskus)
                      for id_igre, (igra, poskus) in self.igre.items()}
-            json.dump(igre1, f)
+            json.dump(igre1, f, ensure_ascii=False)
         return
 
     def nalozi_igre_iz_datoteke(self):
