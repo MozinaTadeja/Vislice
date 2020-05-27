@@ -1,14 +1,16 @@
 import random
+import json
 
 STEVILO_DOVOLJENIH_NAPAK = 9
 PRAVILNA_CRKA = "+"
 PONOVLJENA_CRKA = "O"
+VEC_KOT_CRKA = ">"
+POSEBEN_ZNAK = "#"
 NAPACNA_CRKA = "-"
 ZMAGA = "W"
 PORAZ = "X"
-VEC_KOT_CRKA = ">"
-POSEBEN_ZNAK = "#"
 ZACETEK = "S"
+
 
 class Igra:
 
@@ -18,10 +20,10 @@ class Igra:
             self.crke = []
         else:
             self.crke = crke
-        
+
     def napacne_crke(self):
         return [crka for crka in self.crke if crka not in self.geslo]
-    
+
     def pravilne_crke(self):
         return [crka for crka in self.crke if crka in self.geslo]
 
@@ -42,7 +44,7 @@ class Igra:
             else:
                 delni += '_ '
         return delni[:-1]
-    
+
     def nepravilni_ugibi(self):
         return " ".join(self.napacne_crke())
 
@@ -50,7 +52,7 @@ class Igra:
         if len(ugib) > 1 or len(ugib) == 0:
             return VEC_KOT_CRKA
         crka = ugib.upper()
-        if crka not in "ABCČDEFGHIJKLMNOPRSŠTVUZŽXYWQĐĆ":
+        if crka not in 'ABCČDEFGHIJKLMNOPRSŠTUVZŽXYZWQĆĐ':
             return POSEBEN_ZNAK
         if crka in self.crke:
             return PONOVLJENA_CRKA
@@ -68,8 +70,10 @@ class Igra:
                 else:
                     return NAPACNA_CRKA
 
-with open("besede.txt", "r", encoding="utf8") as datoteka_z_besedami:
+
+with open("besede.txt", "r", encoding="utf-8") as datoteka_z_besedami:
     bazen_besed = [vrstica.strip().upper() for vrstica in datoteka_z_besedami]
+
 
 def nova_igra():
     return Igra(random.choice(bazen_besed))
@@ -77,8 +81,10 @@ def nova_igra():
 
 class Vislice:
 
-    def __init__(self):
+    def __init__(self, datoteka_s_stanjem, datoteka_z_besedami='besede.txt'):
         self.igre = {}
+        self.datoteka_s_stanjem = datoteka_s_stanjem
+        self.datoteka_z_besedami = datoteka_z_besedami
 
     def prost_id_igre(self):
         if len(self.igre) == 0:
@@ -87,12 +93,31 @@ class Vislice:
             return max(self.igre.keys()) + 1
 
     def nova_igra(self):
-        igra = nova_igra()
+        self.nalozi_igre_iz_datoteke()
+        with open(self.datoteka_z_besedami, 'r', encoding='utf-8') as f:
+            bazen_besed = [vrstica.strip().upper() for vrstica in f]
+        igra = Igra(random.choice(bazen_besed))
         id_igre = self.prost_id_igre()
         self.igre[id_igre] = (igra, ZACETEK)
+        self.zapisi_igre_v_datoteko()
         return id_igre
 
     def ugibaj(self, id_igre, crka):
+        self.nalozi_igre_iz_datoteke()
         igra, _ = self.igre[id_igre]
         poskus = igra.ugibaj(crka)
         self.igre[id_igre] = (igra, poskus)
+        self.zapisi_igre_v_datoteko()
+
+    def zapisi_igre_v_datoteko(self):
+        with open(self.datoteka_s_stanjem, 'w', encoding='utf-8') as f:
+            igre1 = {id_igre: ((igra.geslo, igra.crke), poskus)
+                     for id_igre, (igra, poskus) in self.igre.items()}
+            json.dump(igre1, f)
+        return
+
+    def nalozi_igre_iz_datoteke(self):
+        with open(self.datoteka_s_stanjem, 'r', encoding="utf-8") as f:
+            igre = json.load(f)
+            self.igre = {int(id_igre): (Igra(geslo, crke), poskus)
+                         for id_igre, ((geslo, crke), poskus) in igre.items()}
